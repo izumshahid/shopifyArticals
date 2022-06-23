@@ -48,7 +48,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = process.env.NODE_ENV === "production"
+  isProd = true // process.env.NODE_ENV === "production"
 ) {
   const app = express();
   app.set("top-level-oauth-cookie", TOP_LEVEL_OAUTH_COOKIE);
