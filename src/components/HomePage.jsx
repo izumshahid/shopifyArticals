@@ -315,10 +315,16 @@ export function HomePage() {
             </StyledButton>
 
             <StyledButton
-              disabled={!allDNDItems.length}
-              backgroundColor={!allDNDItems.length ? "lightGray" : null}
-              hoverBackgroundColor={!allDNDItems.length ? "lightGray" : null}
-              cursor={allDNDItems.length ? "pointer" : "not-allowed"}
+              disabled={!allDNDItems.length || isLoading}
+              backgroundColor={
+                !allDNDItems.length || isLoading ? "lightGray" : null
+              }
+              hoverBackgroundColor={
+                !allDNDItems.length || isLoading ? "lightGray" : null
+              }
+              cursor={
+                !allDNDItems.length || isLoading ? "not-allowed" : "pointer"
+              }
               onClick={() => {
                 setAllDNDItems([]);
                 setAllFieldHeading([]);

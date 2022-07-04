@@ -67,9 +67,6 @@ const SideBar = () => {
               <div
                 ref={provided.innerRef}
                 style={{
-                  backgroundColor: snapshot.isDraggingOver
-                    ? "lightred"
-                    : "lightblue",
                   padding: "8px",
                   height: "100%",
                   minHeight: "100vh",

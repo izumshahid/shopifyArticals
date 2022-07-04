@@ -19,45 +19,10 @@ export default function App() {
     <PolarisProvider i18n={translations}>
       <MyProvider>
         <Layout>
-          <Header
-            style={{
-              background: "lightblue",
-            }}
-          >
-            <ul className="nav nav-tabs" id="navId">
-              <li className="nav-item mx-2">
-                <div
-                  style={{
-                    maxWidth: "100px",
-                    height: "60px",
-                  }}
-                >
-                  <img
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectfit: "fill",
-                    }}
-                    src="https://picsum.photos/200/300?random=1"
-                  />
-                </div>
-              </li>
-              {/* <li className="nav-item">
-                <a href="#tab1Id" className="nav-link">
-                  Create
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#tab5Id" className="nav-link">
-                  Update
-                </a>
-              </li> */}
-            </ul>
-          </Header>
           <Layout>
             <Sider
               style={{
-                background: "lightblue",
+                background: "#b9bebb3d",
               }}
             >
               <SideBar />
