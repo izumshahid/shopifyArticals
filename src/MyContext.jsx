@@ -20,6 +20,7 @@ export const MyProvider = ({ children }) => {
   const [selectedLinkedArticles, setSelectedLinkedArticles] = useState("-1"); //jo linked articals han konsa select hoa ha ya vo store kara raha ha
   const [shopifyCollections, setShopifyCollections] = useState([]); //containg all the shopify collections
   const [isGettingData, setIsGettingData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <MyContext.Provider
@@ -52,6 +53,8 @@ export const MyProvider = ({ children }) => {
         setShopifyCollections,
         isGettingData,
         setIsGettingData,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

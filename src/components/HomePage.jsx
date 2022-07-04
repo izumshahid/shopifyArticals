@@ -12,7 +12,6 @@ import { shopifyFrontApolloClient } from "../../apolloClients";
 import { GET_ARTICALS, GET_COLLECTIONS } from "../../GQL/Queries";
 
 export function HomePage() {
-  const [isLoading, setIsLoading] = useState(false);
   const {
     setShowToast,
     showToast,
@@ -33,6 +32,8 @@ export function HomePage() {
     setShopifyCollections,
     isGettingData,
     setIsGettingData,
+    isLoading,
+    setIsLoading,
   } = useContext(MyContext);
 
   const onSave = async () => {
@@ -56,6 +57,7 @@ export function HomePage() {
       setIsLoading(false);
       setShowToast({
         ...showToast,
+        error: false,
         visible: true,
         message: "Saved Successfully",
       });
@@ -103,10 +105,10 @@ export function HomePage() {
     setIsLoading(true);
     try {
       const res = await axios(config);
-      console.log("==>>", res);
       setIsLoading(false);
       setShowToast({
         ...showToast,
+        error: false,
         visible: true,
         message: "Updated Successfully",
       });
@@ -182,6 +184,7 @@ export function HomePage() {
     }
   };
 
+  //get custom data from db for this artical
   const getLinkedArticalDataFromDb = async (articalId) => {
     setIsGettingData(true);
     var data = JSON.stringify({
@@ -198,9 +201,7 @@ export function HomePage() {
     };
 
     try {
-      const {
-        data: { articalData = [] },
-      } = await axios(config);
+      const { data: { articalData = {} } = {} } = await axios(config);
 
       const { custom_data } = articalData;
 

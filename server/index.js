@@ -8,6 +8,8 @@ import mongoose from "mongoose";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import Mongo_blogs from "../mongo/shopify.js";
+import axios from "axios";
+import { getAllThemes, uploadImage } from "./helpers/custom.js";
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -48,7 +50,8 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = true // process.env.NODE_ENV === "production"
+  isProd = false
+  // process.env.NODE_ENV === "production"
 ) {
   const app = express();
   app.set("top-level-oauth-cookie", TOP_LEVEL_OAUTH_COOKIE);
@@ -116,25 +119,66 @@ export async function createServer(
     }
   });
 
-  // Create record, store artical id and the custom obj whiich needs to be attached to it
-  app.post("/api/articalData", verifyRequest(app), async (req, res, next) => {
+  //get custom json object linked to an artical
+  app.post("/api/getArticalData", async (req, res, next) => {
     try {
-      const { allDNDItems, articalId } = req.body;
+      const { articalId } = req.body;
 
-      await Mongo_blogs.create({
+      const articalData = await Mongo_blogs.findOne({
         shopify_artical_Id: articalId,
-        custom_data: allDNDItems,
       });
-      res.status(200).send({ message: "success" });
+      res.status(200).send({ articalData });
     } catch (error) {
       res.status(501).send(error.message);
     }
   });
 
-  // update record
-  app.put("/api/articalData", verifyRequest(app), async (req, res, next) => {
+  // Create record, store artical id and the custom obj whiich needs to be attached to it
+  app.post("/api/articalData", async (req, res, next) => {
     try {
-      const { allDNDItems, articalId } = req.body;
+      let { allDNDItems, articalId } = req.body;
+
+      let cdnObj;
+      for (let i = 0; i < allDNDItems.length; i++) {
+        if (
+          allDNDItems[i].type === "image" ||
+          allDNDItems[i].type === "images"
+        ) {
+          const imagesObj = allDNDItems[i];
+          cdnObj = await uploadImage({ imagesObj });
+          allDNDItems[i].content = cdnObj;
+        }
+      }
+
+      await Mongo_blogs.create({
+        shopify_artical_Id: articalId,
+        custom_data: allDNDItems,
+      });
+      return res.status(200).send({ message: "success", allDNDItems });
+    } catch (error) {
+      console.log("=> /api/articalData error : ", error);
+      res.status(501).send(error.message);
+    }
+  });
+
+  // update record
+  app.put("/api/articalData", async (req, res, next) => {
+    try {
+      let { allDNDItems, articalId } = req.body;
+
+      //get all the obj with type image or images to upload them to shopify and get the cdn
+      // TODO: daikhna ha agar cdn hi araha ha upper say to usko nai uplaod krna
+      let cdnObj;
+      for (let i = 0; i < allDNDItems.length; i++) {
+        if (
+          allDNDItems[i].type === "image" ||
+          allDNDItems[i].type === "images"
+        ) {
+          const imagesObj = allDNDItems[i];
+          cdnObj = await uploadImage({ imagesObj });
+          allDNDItems[i].content = cdnObj;
+        }
+      }
 
       await Mongo_blogs.findOneAndUpdate(
         { shopify_artical_Id: articalId },
@@ -148,7 +192,7 @@ export async function createServer(
           new: true,
         }
       );
-      res.status(200).send({ message: "success" });
+      return res.status(200).send({ message: "success", allDNDItems });
     } catch (error) {
       res.status(501).send(error.message);
     }
@@ -156,7 +200,7 @@ export async function createServer(
 
   app.get(
     "/api/savedArticalIds",
-    verifyRequest(app),
+
     async (req, res, next) => {
       try {
         const records = await Mongo_blogs.find({});
@@ -170,18 +214,18 @@ export async function createServer(
     }
   );
 
-  //get custom json object linked to an artical
-  app.post("/api/getArticalData", async (req, res, next) => {
+  app.get("/api/getAllThemes", async (req, res, next) => {
     try {
-      const { articalId } = req.body;
-
-      const articalData = await Mongo_blogs.findOne({
-        shopify_artical_Id: articalId,
-      });
-      res.status(200).send({ articalData });
+      const themes = await getAllThemes();
+      res.status(200).send({ themes });
     } catch (error) {
-      res.status(501).send(error.message);
+      res.status(501).send({ error: error.message });
     }
+  });
+
+  //this is just a simple route for antD image uploader, agar ya nai hoga to vo error dayta ha
+  app.post("/api/uploadImage", async (req, res, next) => {
+    res.status(200).send({ message: "success" });
   });
 
   /**

@@ -17,11 +17,22 @@ const getBase64 = (file) =>
   });
 
 const ImageUploader = ({ index, count = 1 }) => {
-  const { allDNDItems, setAllDNDItems } = useContext(MyContext);
+  const { allDNDItems, setAllDNDItems, setShowToast, showToast } =
+    useContext(MyContext);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState([
+    // {
+    //   name: "xxx.png",
+    //   status: "done",
+    //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    //   thumbUrl:
+    //     "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    // },
+  ]);
+
+  // conver tfile to btoa
 
   const handleCancel = () => setPreviewVisible(false);
 
@@ -37,11 +48,37 @@ const ImageUploader = ({ index, count = 1 }) => {
     );
   };
 
-  const handleChange = ({ fileList: newFileList }) => {
-    const newAllDNDItems = allDNDItems;
+  const handleChange = async ({ fileList: newFileList }) => {
+    //check size for multiple ffiles
+    let isGreater = false;
 
-    newAllDNDItems[index].content = newFileList;
-    console.log("=====", newAllDNDItems[index]);
+    //while uploading multiple files if any one file is greater than 3mb then show toast and not add it in the list
+    newFileList.forEach((file) => {
+      if (file.size > 1024 * 1024 * 3) {
+        setShowToast({
+          ...showToast,
+          error: true,
+          visible: true,
+          message: "file too large, max 3mb",
+        });
+        isGreater = true;
+      }
+    });
+
+    //if any file is greater than 3MB, don't upload or push to state
+    if (isGreater) return;
+
+    let localFileList = [...newFileList];
+    localFileList.forEach(function (file, index) {
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        file.base64Str = e.target.result;
+      };
+      file?.originFileObj && reader.readAsDataURL(file?.originFileObj); //added this check so while removing it wont be called and error wont be showen
+    });
+
+    const newAllDNDItems = allDNDItems;
+    newAllDNDItems[index].content = localFileList;
 
     setFileList(newFileList);
     setAllDNDItems(newAllDNDItems);
@@ -68,7 +105,8 @@ const ImageUploader = ({ index, count = 1 }) => {
   return (
     <>
       <Upload
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        accept=".png,.jpg,.jpeg"
+        action={`${process.env.HOST}/api/uploadImage`}
         listType="picture-card"
         fileList={fileList}
         onPreview={handlePreview}

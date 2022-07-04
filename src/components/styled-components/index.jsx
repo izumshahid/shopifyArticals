@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledInput = styled.input`
   padding: 8px;
   border-radius: 8px;
-  height: 40px;
+  height: ${(props) => props.height || "40px"};
   font-size: 16px;
   margin-bottom: 15px;
   color: ${(props) => props.inputColor || "palevioletred"};
@@ -61,4 +61,15 @@ export const Spinner = styled.div`
     -webkit-animation: 0.75s linear infinite spinner-border;
     animation: 0.75s linear infinite spinner-border;
   }
+`;
+
+export const BlurDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  position: absolute;
+  backdrop-filter: blur(2px);
+  width: ${(props) => props.width || "95%"};
+  height: ${(props) => props.height || "68%"};
+  z-index: ${(props) => props.zIndex || "1"};
 `;

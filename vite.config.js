@@ -14,6 +14,7 @@ export default {
     "process.env.X_SHOPIFY_STOREFRONT_ACCESS_TOKEN": JSON.stringify(
       process.env.X_SHOPIFY_STOREFRONT_ACCESS_TOKEN
     ),
+    "process.env.HOST": JSON.stringify(process.env.HOST),
   },
   plugins: [react()],
 };

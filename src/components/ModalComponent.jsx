@@ -18,6 +18,7 @@ const ModalComponent = () => {
     allFieldHeading,
     setAllFieldHeading,
     setCreateNewField,
+    allDNDItems,
   } = useContext(MyContext);
 
   const onClose = () => {
@@ -65,6 +66,19 @@ const ModalComponent = () => {
     (_checked, newValue) => setFieldType(newValue),
     []
   );
+
+  //if collection is added to the allDNDItems then he cant add another one
+  const checkCollectionExists = () => {
+    const collections = allDNDItems.filter(
+      (item) => item.type === "collection"
+    );
+
+    if (collections.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <Modal
@@ -167,19 +181,21 @@ const ModalComponent = () => {
         </Row>
 
         <Row>
-          <Col md={12}>
-            <RadioButton
-              label={
-                <p className="m-0">
-                  <strong>Shopify collection</strong>
-                </p>
-              }
-              helpText="This will add a dropdown to select a shopify collection."
-              id="collection"
-              checked={fieldType === "collection"}
-              onChange={handleChange}
-            />
-          </Col>
+          {checkCollectionExists() ? null : (
+            <Col md={12}>
+              <RadioButton
+                label={
+                  <p className="m-0">
+                    <strong>Shopify collection</strong>
+                  </p>
+                }
+                helpText="This will add a dropdown to select a shopify collection."
+                id="collection"
+                checked={fieldType === "collection"}
+                onChange={handleChange}
+              />
+            </Col>
+          )}
         </Row>
         <hr />
         <Row>
