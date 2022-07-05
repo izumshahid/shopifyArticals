@@ -65655,7 +65655,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 $le,
                 {
                   accept: ".png,.jpg,.jpeg",
-                  action: "https://08a4-39-45-57-54.ngrok.io/api/uploadImage",
+                  action: "https://2ca8-39-45-57-54.ngrok.io/api/uploadImage",
                   listType: "picture-card",
                   fileList: c,
                   onPreview: y,
@@ -66930,7 +66930,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                                                                                     placeholder:
                                                                                       "Collection heading",
                                                                                     value:
-                                                                                      g.altTextSecond,
+                                                                                      g.collectionHeading,
                                                                                     height:
                                                                                       "32px",
                                                                                     className:

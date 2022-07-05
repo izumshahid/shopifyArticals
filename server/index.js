@@ -32,7 +32,7 @@ Shopify.Context.initialize({
   SCOPES: process.env.SCOPES.split(","),
   HOST_NAME: process.env.HOST.replace(/https:\/\//, ""),
   API_VERSION: ApiVersion.April22,
-  IS_EMBEDDED_APP: true,
+  IS_EMBEDDED_APP: false,
   // This should be replaced with your preferred storage strategy
   SESSION_STORAGE: new Shopify.Session.MemorySessionStorage(),
 });
@@ -50,7 +50,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = false
+  isProd = true
   // process.env.NODE_ENV === "production"
 ) {
   const app = express();
