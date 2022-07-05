@@ -198,21 +198,17 @@ export async function createServer(
     }
   });
 
-  app.get(
-    "/api/savedArticalIds",
+  app.get("/api/savedArticalIds", async (req, res, next) => {
+    try {
+      const records = await Mongo_blogs.find({});
 
-    async (req, res, next) => {
-      try {
-        const records = await Mongo_blogs.find({});
+      const articalIds = records.map((record) => record.shopify_artical_Id);
 
-        const articalIds = records.map((record) => record.shopify_artical_Id);
-
-        res.status(200).send({ articalIds });
-      } catch (error) {
-        res.status(501).send(error.message);
-      }
+      res.status(200).send({ articalIds });
+    } catch (error) {
+      res.status(501).send(error.message);
     }
-  );
+  });
 
   app.get("/api/getAllThemes", async (req, res, next) => {
     try {

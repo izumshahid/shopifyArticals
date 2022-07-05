@@ -459,7 +459,7 @@ const Index = () => {
                                     <Col md={6}>
                                       <StyledInput
                                         placeholder="Collection heading"
-                                        value={item.altTextSecond}
+                                        value={item.collectionHeading}
                                         height="32px"
                                         className="form-control"
                                         onChange={(e) => {
