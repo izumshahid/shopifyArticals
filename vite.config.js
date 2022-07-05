@@ -16,5 +16,20 @@ export default {
     ),
     "process.env.HOST": JSON.stringify(process.env.HOST),
   },
+  resolve: {
+    alias: {
+      // I needed this to make dev mode work.
+      "react/jsx-runtime": "react/jsx-runtime.js",
+    },
+  },
   plugins: [react()],
+  // plugins: [
+  //   react({
+  //     babel: {
+  //       plugins: [
+  //         ["@babel/plugin-transform-react-jsx", { runtime: "automatic" }],
+  //       ],
+  //     },
+  //   }),
+  // ],
 };

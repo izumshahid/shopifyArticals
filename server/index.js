@@ -256,6 +256,7 @@ export async function createServer(
     const fs = await import("fs");
     app.use(compression());
     app.use(serveStatic(resolve("dist/client")));
+    console.log("=> Serving static files from dist/client");
     app.use("/*", (req, res, next) => {
       // Client-side routing will pick up on the correct route to render, so we always render the index here
       res
