@@ -1,13 +1,21 @@
 import { gql } from "@apollo/client";
 
 export const GET_ARTICALS = gql`
-  {
-    articles(first: 250) {
+  query getArticasl($cursor: String) {
+    articles(first: 10, after: $cursor) {
       edges {
         node {
+          authorV2 {
+            name
+          }
           id
           title
         }
+        cursor
+      }
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
       }
     }
   }

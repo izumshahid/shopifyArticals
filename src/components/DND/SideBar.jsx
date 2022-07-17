@@ -102,7 +102,7 @@ const SideBar = () => {
                             <div className="mx-sm-2">
                               <span
                                 className="d-inline-block text-truncate"
-                                style={{ maxWidth: "100px" }}
+                                style={{ maxWidth: "50px" }}
                               >
                                 {item.id}
                               </span>

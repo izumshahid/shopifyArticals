@@ -20,11 +20,7 @@ export default function App() {
       <MyProvider>
         <Layout>
           <Layout>
-            <Sider
-              style={{
-                background: "#b9bebb3d",
-              }}
-            >
+            <Sider>
               <SideBar />
             </Sider>
             <Content
@@ -35,7 +31,6 @@ export default function App() {
               <HomePage />
             </Content>
           </Layout>
-          {/* <Footer>Footer</Footer> */}
         </Layout>
       </MyProvider>
     </PolarisProvider>

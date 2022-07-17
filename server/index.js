@@ -50,7 +50,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = true
+  isProd = false
   // process.env.NODE_ENV === "production"
 ) {
   const app = express();
@@ -133,41 +133,25 @@ export async function createServer(
     }
   });
 
+  //remove the custom json object linked to an artical
+  app.delete("/api/RemoveArticalData", async (req, res, next) => {
+    try {
+      const { articalId } = req.body;
+
+      const articalData = await Mongo_blogs.findOneAndDelete({
+        shopify_artical_Id: articalId,
+      });
+      res.status(200).send({ articalData });
+    } catch (error) {
+      res.status(501).send(error.message);
+    }
+  });
+
   // Create record, store artical id and the custom obj whiich needs to be attached to it
   app.post("/api/articalData", async (req, res, next) => {
     try {
       let { allDNDItems, articalId } = req.body;
 
-      let cdnObj;
-      for (let i = 0; i < allDNDItems.length; i++) {
-        if (
-          allDNDItems[i].type === "image" ||
-          allDNDItems[i].type === "images"
-        ) {
-          const imagesObj = allDNDItems[i];
-          cdnObj = await uploadImage({ imagesObj });
-          allDNDItems[i].content = cdnObj;
-        }
-      }
-
-      await Mongo_blogs.create({
-        shopify_artical_Id: articalId,
-        custom_data: allDNDItems,
-      });
-      return res.status(200).send({ message: "success", allDNDItems });
-    } catch (error) {
-      console.log("=> /api/articalData error : ", error);
-      res.status(501).send(error.message);
-    }
-  });
-
-  // update record
-  app.put("/api/articalData", async (req, res, next) => {
-    try {
-      let { allDNDItems, articalId } = req.body;
-
-      //get all the obj with type image or images to upload them to shopify and get the cdn
-      // TODO: daikhna ha agar cdn hi araha ha upper say to usko nai uplaod krna
       let cdnObj;
       for (let i = 0; i < allDNDItems.length; i++) {
         if (
@@ -192,8 +176,10 @@ export async function createServer(
           new: true,
         }
       );
+
       return res.status(200).send({ message: "success", allDNDItems });
     } catch (error) {
+      console.log("=> /api/articalData error : ", error);
       res.status(501).send(error.message);
     }
   });
