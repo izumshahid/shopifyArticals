@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import axios from "axios";
+import { notificationError, notificationSuccess } from "../../utils/helper";
 
 const ModalWarning = ({
   removeLink,
@@ -27,14 +28,25 @@ const ModalWarning = ({
         },
         data: data,
       };
-      const resp = await axios(config);
+      try {
+        const resp = await axios(config);
 
-      setLoading(false);
-      setVisible(false);
-      setRemoveLink({
-        showModal: false,
-      });
-      getAllAritcalIdsFromDb();
+        setLoading(false);
+        setVisible(false);
+        setRemoveLink({
+          showModal: false,
+        });
+        getAllAritcalIdsFromDb();
+        notificationSuccess({
+          message: "Success",
+          description: "Artical Removed Successfully",
+        });
+      } catch (err) {
+        notificationError({
+          message: "Error",
+          description: err.message,
+        });
+      }
     } else {
       setRemoveLink({
         ...removeLink,
