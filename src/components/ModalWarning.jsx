@@ -30,7 +30,6 @@ const ModalWarning = ({
       };
       try {
         const resp = await axios(config);
-
         setLoading(false);
         setVisible(false);
         setRemoveLink({

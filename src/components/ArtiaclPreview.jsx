@@ -44,7 +44,11 @@ const ArtiaclPreview = () => {
               className="untitled-serif-regular-14 mb-2"
               style="font-size: 14px; font-style: italic;"
             >
-              By INS
+              ${
+                shopifyAritcals.data.find(
+                  (articalItem) => articalItem.id == articalSelected
+                )?.author || ""
+              }
             </div>
 
             <div className="untitled-serif-regular-14 mb-2">July 2022</div>
@@ -171,8 +175,7 @@ const ArtiaclPreview = () => {
                       "replace_me",
                       item.content[0]?.thumbUrl?.length > 0
                         ? item.content[0]?.thumbUrl
-                        : item.content[0]?.response?.cdnObj ||
-                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3vrTUU3CKbUDThpm8aZzFXdTmai6PodNfXA&usqp=CAU"
+                        : item.content[0]?.response?.cdnObj || ""
                     )
                   )}
                 </div>

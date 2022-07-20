@@ -11,7 +11,7 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import Mongo_blogs from "../mongo/shopify.js";
 import axios from "axios";
-import { getAllThemes, uploadImage } from "./helpers/custom.js";
+import { getAllThemes, uploadImage, uploadToBucket } from "./helpers/custom.js";
 import { getArticalsEndPOint, getBlogsEndPoint } from "./EndPoints.js";
 import fs from "fs";
 
@@ -168,6 +168,13 @@ export async function createServer(
           allDNDItems[i].type === "images"
         ) {
           const imagesObj = allDNDItems[i];
+          // uploadToBucket(req, res, function (error) {
+          //   if (error) {
+          //     console.log(error);
+          //     return res.redirect("/error");
+          //   }
+          //   console.log("File uploaded successfully.", res);
+          // });
           cdnObj = await uploadImage({ imagesObj });
           allDNDItems[i].content = cdnObj;
         }

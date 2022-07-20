@@ -1,4 +1,31 @@
 import axios from "axios";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+import multer from "multer";
+
+aws.config.update({
+  accessKeyId: "UQG2WY2QY4GYHISWXYY7",
+  secretAccessKey: "CZLtRHLsFQ/A+jV4yXg1mZjf6+dZYFOky5phVNnxXiU",
+});
+
+// Set S3 endpoint to DigitalOcean Spaces
+const spacesEndpoint = new aws.Endpoint(process.env.SPACES_ENDPOINT);
+const s3 = new aws.S3({
+  endpoint: spacesEndpoint,
+});
+
+// Change bucket property to your Space name
+export const uploadToBucket = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "printfresh-dev/images/",
+    acl: "public-read",
+    key: function (request, file, cb) {
+      console.log("==>> uploadToBucket : ", file);
+      cb(null, file.originalname);
+    },
+  }),
+}).array("upload", 1);
 
 function* genApiCall(content, themeId) {
   for (const item of content) {
@@ -82,10 +109,6 @@ export const uploadImage = async ({ imagesObj = {} }) => {
   }
 };
 
-export const getPublishedTheme = ({ themes = [] }) => {
-  return themes.find((theme) => theme.role === "main");
-};
-
 export const getAllThemes = async () => {
   var config = {
     method: "get",
@@ -101,4 +124,8 @@ export const getAllThemes = async () => {
   } catch (error) {
     return { error: error.message };
   }
+};
+
+export const getPublishedTheme = ({ themes = [] }) => {
+  return themes.find((theme) => theme.role === "main");
 };

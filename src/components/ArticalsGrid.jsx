@@ -375,7 +375,6 @@ const ArticalsGrid = () => {
     try {
       let { data: { articalIds = [] } = {} } = await axios(config);
       setArticalIdSaveInDb(articalIds);
-      getShopifyArticalsFarwordDirection();
     } catch (err) {
       setIsLoading(false);
       notificationError({
@@ -400,6 +399,7 @@ const ArticalsGrid = () => {
   useEffect(() => {
     setIsLoading(true);
     getAllAritcalIdsFromDb();
+    getShopifyArticalsFarwordDirection();
     setPage(0);
   }, []);
 
