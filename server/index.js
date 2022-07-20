@@ -10,6 +10,7 @@ import verifyRequest from "./middleware/verify-request.js";
 import Mongo_blogs from "../mongo/shopify.js";
 import axios from "axios";
 import { getAllThemes, uploadImage } from "./helpers/custom.js";
+import { getArticalsEndPOint, getBlogsEndPoint } from "./EndPoints.js";
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -129,7 +130,9 @@ export async function createServer(
       });
       res.status(200).send({ articalData });
     } catch (error) {
-      res.status(501).send(error.message);
+      res
+        .status(501)
+        .json({ error: error.message, message: "failed to get artical data" });
     }
   });
 
@@ -143,7 +146,10 @@ export async function createServer(
       });
       res.status(200).send({ articalData });
     } catch (error) {
-      res.status(501).send(error.message);
+      res.status(501).json({
+        error: error.message,
+        message: "failed to remove artical data",
+      });
     }
   });
 
@@ -180,7 +186,7 @@ export async function createServer(
       return res.status(200).send({ message: "success", allDNDItems });
     } catch (error) {
       console.log("=> /api/articalData error : ", error);
-      res.status(501).send(error.message);
+      res.status(501).json({ error: error.message, message: "failed to save" });
     }
   });
 
@@ -192,7 +198,9 @@ export async function createServer(
 
       res.status(200).send({ articalIds });
     } catch (error) {
-      res.status(501).send(error.message);
+      res
+        .status(501)
+        .json({ error: error.message, message: "failed to get ids" });
     }
   });
 
@@ -201,13 +209,60 @@ export async function createServer(
       const themes = await getAllThemes();
       res.status(200).send({ themes });
     } catch (error) {
-      res.status(501).send({ error: error.message });
+      res
+        .status(501)
+        .json({ error: error.message, message: "failed to get themes" });
     }
   });
 
   //this is just a simple route for antD image uploader, agar ya nai hoga to vo error dayta ha
   app.post("/api/uploadImage", async (req, res, next) => {
     res.status(200).send({ message: "success" });
+  });
+
+  const getBLogs = async () => {
+    var config = {
+      method: "get",
+      url: getBlogsEndPoint,
+      headers: {
+        "X-Shopify-Access-Token": process.env.X_SHOPIFY_ACCESS_TOKEN,
+      },
+    };
+
+    const { data: { blogs = [] } = {} } = await axios(config);
+    return blogs;
+  };
+
+  app.get("/api/getArticals", async (req, res, next) => {
+    try {
+      const blogsArr = await getBLogs();
+
+      const articalEndpOint = getArticalsEndPOint.replace(
+        "<blogId>",
+        blogsArr[0].id
+      );
+
+      var config = {
+        method: "get",
+        url: articalEndpOint,
+        headers: {
+          "X-Shopify-Access-Token": process.env.X_SHOPIFY_ACCESS_TOKEN,
+        },
+      };
+
+      const { data: { articles = [] } = {} } = await axios(config);
+
+      //sort wrt update
+      articles.sort((a, b) => {
+        return new Date(b.updated_at) - new Date(a.updated_at);
+      });
+
+      res.status(200).json({ articles });
+    } catch (error) {
+      res
+        .status(501)
+        .json({ error: error.message, message: "failed to get articals" });
+    }
   });
 
   /**

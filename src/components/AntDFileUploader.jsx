@@ -5,20 +5,10 @@ import { Modal, Upload } from "antd";
 import { useState } from "react";
 import { useEffect } from "react";
 import { MyContext } from "../MyContext";
-
-const getBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = () => resolve(reader.result);
-
-    reader.onerror = (error) => reject(error);
-  });
+import { notificationError } from "../../utils/helper";
 
 const ImageUploader = ({ index, count = 1 }) => {
-  const { allDNDItems, setAllDNDItems, setShowToast, showToast } =
-    useContext(MyContext);
+  const { allDNDItems, setAllDNDItems } = useContext(MyContext);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
@@ -35,6 +25,14 @@ const ImageUploader = ({ index, count = 1 }) => {
   // conver tfile to btoa
 
   const handleCancel = () => setPreviewVisible(false);
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -55,12 +53,11 @@ const ImageUploader = ({ index, count = 1 }) => {
     //while uploading multiple files if any one file is greater than 3mb then show toast and not add it in the list
     newFileList.forEach((file) => {
       if (file.size > 1024 * 1024 * 3) {
-        setShowToast({
-          ...showToast,
-          error: true,
-          visible: true,
-          message: "file too large, max 3mb",
+        notificationError({
+          message: "Error",
+          description: "Please upload file less than 3mb",
         });
+
         isGreater = true;
       }
     });
@@ -69,19 +66,16 @@ const ImageUploader = ({ index, count = 1 }) => {
     if (isGreater) return;
 
     let localFileList = [...newFileList];
-    localFileList.forEach(function (file, index) {
-      let reader = new FileReader();
-      reader.onload = (e) => {
-        file.base64Str = e.target.result;
-      };
-      file?.originFileObj && reader.readAsDataURL(file?.originFileObj); //added this check so while removing it wont be called and error wont be showen
+    localFileList.forEach(async function (file, index) {
+      file.base64Str =
+        file?.originFileObj && (await getBase64(file.originFileObj));
     });
 
-    const newAllDNDItems = allDNDItems;
-    newAllDNDItems[index].content = localFileList;
+    const newAllDNDItems = [...allDNDItems];
+    newAllDNDItems[index].content = [...localFileList];
 
-    setFileList(newFileList);
-    setAllDNDItems(newAllDNDItems);
+    setFileList([...newFileList]);
+    setAllDNDItems([...newAllDNDItems]);
   };
 
   const uploadButton = (
@@ -109,6 +103,7 @@ const ImageUploader = ({ index, count = 1 }) => {
         action={`${process.env.HOST}/api/uploadImage`}
         listType="picture-card"
         fileList={fileList}
+        onRemove={() => console.log("")}
         onPreview={handlePreview}
         onChange={handleChange}
       >

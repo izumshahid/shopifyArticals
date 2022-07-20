@@ -90,10 +90,10 @@ const ModalWarning = ({
         </Button>,
       ]}
     >
-      <p>Are you sure you want to remove the link for this article?</p>
+      <p>Are you sure you want to remove the linked data for this article?</p>
 
       <Input.Password
-        placeholder="input password"
+        placeholder="input secret key"
         className="w-75 form-control"
         onChange={handleChange}
         value={removeLink.secretKey}

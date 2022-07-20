@@ -35,12 +35,9 @@ const Index = () => {
     articalSelected,
     setArticalSelected,
     isGettingData,
-    setIsGettingData,
     setShowAddFieldModal,
     setShowGrid,
     shopifyAritcals,
-    setFieldCount,
-    fieldCount,
     setIsLoading,
   } = useContext(MyContext);
 
@@ -218,7 +215,7 @@ const Index = () => {
     //
     <>
       <Row className="d-flex">
-        <Col span={4}>
+        <Col span={10}>
           <StyledButton
             disabled={isLoading || isGettingData}
             backgroundColor={isLoading || isGettingData ? "lightGray" : null}
@@ -231,15 +228,6 @@ const Index = () => {
               setAllFieldHeading([]);
               setArticalSelected("");
               setShowGrid(true);
-              setFieldCount({
-                question: 0,
-                answer: 0,
-                quote: 0,
-                text: 0,
-                image: 0,
-                images: 0,
-                collection: 0,
-              });
             }}
             width="fit-content"
             padding="8px 15px"
@@ -250,7 +238,7 @@ const Index = () => {
             </strong>
           </StyledButton>
         </Col>
-        <Col span={20} className="d-flex justify-content-end">
+        <Col span={14} className="d-flex justify-content-end">
           <StyledButton
             disabled={isLoading || isGettingData}
             backgroundColor={isLoading || isGettingData ? "lightGray" : null}
@@ -279,15 +267,6 @@ const Index = () => {
             onClick={() => {
               setAllDNDItems([]);
               setAllFieldHeading([]);
-              setFieldCount({
-                question: 0,
-                answer: 0,
-                quote: 0,
-                text: 0,
-                image: 0,
-                images: 0,
-                collection: 0,
-              });
             }}
           >
             <strong>Clear all</strong>
@@ -403,10 +382,18 @@ const Index = () => {
                                         </div>
                                         <div className="d-flex mx-sm-3">
                                           <span
-                                            className="d-inline-block text-truncate"
+                                            className="d-inline-block"
                                             style={{ maxWidth: "500px" }}
                                           >
-                                            {item.id}
+                                            {String(item.id).split("_")[0]}
+                                            <span
+                                              style={{
+                                                fontSize: "10px",
+                                                color: "#98a4af",
+                                              }}
+                                            >
+                                              {String(item.id).split("_")[1]}
+                                            </span>
                                           </span>
                                         </div>
                                       </div>
@@ -590,7 +577,7 @@ const Index = () => {
                                             placeholder="Text for image"
                                             height="32px"
                                             value={item.altText}
-                                            className="form-control mb-0"
+                                            className="form-control mb-0 d-none"
                                             onChange={(e) => {
                                               const newItems = [...allDNDItems];
                                               newItems[idx].altText =
@@ -611,7 +598,7 @@ const Index = () => {
                                             placeholder="Text for first image"
                                             value={item.altTextFirst}
                                             height="32px"
-                                            className="form-control"
+                                            className="d-none form-control"
                                             onChange={(e) => {
                                               const newItems = [...allDNDItems];
                                               newItems[idx].altTextFirst =
@@ -627,7 +614,7 @@ const Index = () => {
                                             placeholder="Text for second image"
                                             value={item.altTextSecond}
                                             height="32px"
-                                            className="form-control mx-2"
+                                            className="d-none form-control mx-2"
                                             onChange={(e) => {
                                               const newItems = [...allDNDItems];
                                               newItems[idx].altTextSecond =

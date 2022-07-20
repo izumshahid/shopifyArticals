@@ -1,22 +1,38 @@
 import { gql } from "@apollo/client";
 
-export const GET_ARTICALS = gql`
-  query getArticasl($cursor: String) {
-    articles(first: 10, after: $cursor) {
-      edges {
-        node {
-          authorV2 {
-            name
-          }
-          id
-          title
+const ARTICLE_FRAGMENT = `
+    edges {
+      node {
+        authorV2 {
+          name
         }
-        cursor
+        image {
+          src
+        }
+        onlineStoreUrl
+        id
+        title
       }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+  
+`;
+
+export const GET_ARTICALS_FARWORD = gql`
+  query getArticales($cursor: String) {
+    articles(first: 5, after: $cursor, sortKey: UPDATED_AT, reverse: true) {
+      ${ARTICLE_FRAGMENT}
+    }
+  }
+`;
+export const GET_ARTICALS_BACKWORD = gql`
+  query getArticales($cursor: String) {
+    articles(last: 5, before: $cursor, sortKey: UPDATED_AT, reverse: true) {
+      ${ARTICLE_FRAGMENT}
     }
   }
 `;

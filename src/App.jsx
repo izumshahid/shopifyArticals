@@ -5,14 +5,12 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./assets/style.css";
 import "antd/dist/antd.css";
 
-//BrowserRouter, Routes, Route,
-import { Link } from "react-router-dom";
-
 import { HomePage } from "./components/HomePage";
 import { MyProvider } from "./MyContext";
 import { Layout } from "antd";
 import SideBar from "./components/DND/SideBar";
-const { Header, Content, Footer, Sider } = Layout;
+import ArtiaclPreview from "./components/ArtiaclPreview";
+const { Content, Sider } = Layout;
 
 export default function App() {
   return (
@@ -20,7 +18,7 @@ export default function App() {
       <MyProvider>
         <Layout>
           <Layout>
-            <Sider>
+            <Sider className="DNDSideBar">
               <SideBar />
             </Sider>
             <Content
@@ -30,6 +28,9 @@ export default function App() {
             >
               <HomePage />
             </Content>
+            <Sider className="previewBar">
+              <ArtiaclPreview />
+            </Sider>
           </Layout>
         </Layout>
       </MyProvider>

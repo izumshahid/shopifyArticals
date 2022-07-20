@@ -2,10 +2,56 @@
   border: none !important;
 }
 
-.ant-layout-sider {
+.DNDSideBar {
   background: #b9bebb3d !important;
-  min-width: 100px !important;
+  min-width: 5% !important;
   max-width: 150px !important;
+}
+
+.previewBar {
+  background: #b9bebb3d !important;
+  min-width: 20% !important;
+  width: 100% !important;
+}
+
+/* custom scrolbar to preview section */
+/* width */
+.previewBar ::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Track */
+.previewBar ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+.previewBar ::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.previewBar ::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+/* custom scrolbar to preview section */
+
+.articalPreviewWrapper {
+  max-height: 100vh;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px;
+}
+
+.articalPreviewWrapper,
+.articalPreviewWrapper p,
+.articalPreviewWrapper h1 {
+  font-size: 10px;
+  text-align: left;
 }
 
 .fieldTypeOpt {
@@ -14,4 +60,8 @@
   width: 90%;
   padding: 5px 8px;
   border-radius: 8px;
+}
+
+.articalsTable .ant-table {
+  min-height: 370px;
 }

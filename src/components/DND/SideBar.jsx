@@ -96,15 +96,25 @@ const SideBar = () => {
                           }}
                         >
                           <div className="d-flex">
-                            <div className="d-inline-block">
-                              <i className="fa fa-bars"></i>
+                            <div className="d-flex align-items-center">
+                              <i
+                                className="fa fa-bars"
+                                style={{ fontSize: "24px" }}
+                              ></i>
                             </div>
-                            <div className="mx-sm-2">
-                              <span
-                                className="d-inline-block text-truncate"
-                                style={{ maxWidth: "50px" }}
-                              >
-                                {item.id}
+                            <div className="mx-sm-1">
+                              <span className="d-inline-block">
+                                {item.type}
+                                <span
+                                  style={{
+                                    width: "100%",
+                                    display: "block",
+                                    fontSize: "10px",
+                                    color: "#98a4af",
+                                  }}
+                                >
+                                  {String(item.id).split("_")[1]}
+                                </span>
                               </span>
                             </div>
                           </div>

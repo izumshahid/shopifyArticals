@@ -2,11 +2,6 @@ import React, { useState, createContext } from "react";
 
 export const MyContext = createContext();
 export const MyProvider = ({ children }) => {
-  const [showToast, setShowToast] = useState({
-    visible: false,
-    message: "",
-    error: false,
-  });
   const [allDNDItems, setAllDNDItems] = useState([]); // contains all the articals coming from shopify
   const [showAddFieldModal, setShowAddFieldModal] = useState(false); // show hide create field modal
   const [allFieldHeading, setAllFieldHeading] = useState([]); // all field headings created to check if same is not being created
@@ -23,28 +18,15 @@ export const MyProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [shopifyAritcals, setShopifyAritcals] = useState({
     data: [],
-    loading: false,
-    error: false,
     hasNext: false,
     hasPrevious: false,
   });
   const [showGrid, setShowGrid] = useState(true); //this is to toggle btwn grid and DND view
-  const [fieldCount, setFieldCount] = useState({
-    question: 0,
-    answer: 0,
-    images: 0,
-    image: 0,
-    text: 0,
-    quote: 0,
-    collection: 0,
-  }); //this is to set the count of fields to make unique headings
   return (
     <MyContext.Provider
       value={{
         allDNDItems,
         setAllDNDItems,
-        showToast,
-        setShowToast,
         showAddFieldModal,
         setShowAddFieldModal,
         allFieldHeading,
@@ -75,8 +57,6 @@ export const MyProvider = ({ children }) => {
         setShopifyAritcals,
         showGrid,
         setShowGrid,
-        fieldCount,
-        setFieldCount,
       }}
     >
       {children}

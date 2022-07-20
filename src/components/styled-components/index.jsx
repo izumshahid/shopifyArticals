@@ -45,6 +45,7 @@ export const StyledButton = styled.button`
 
   :hover {
     background-color: ${(props) => props.hoverBackgroundColor || "#0051c7"};
+    color: ${(props) => props.hoverFontColor || "#fff"};
   }
 `;
 
