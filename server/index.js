@@ -1,6 +1,8 @@
 // @ts-check
 import { resolve } from "path";
 import express from "express";
+import multer from "multer";
+var upload = multer({ dest: "uploads/" });
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
@@ -11,6 +13,7 @@ import Mongo_blogs from "../mongo/shopify.js";
 import axios from "axios";
 import { getAllThemes, uploadImage } from "./helpers/custom.js";
 import { getArticalsEndPOint, getBlogsEndPoint } from "./EndPoints.js";
+import fs from "fs";
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -216,9 +219,28 @@ export async function createServer(
   });
 
   //this is just a simple route for antD image uploader, agar ya nai hoga to vo error dayta ha
-  app.post("/api/uploadImage", async (req, res, next) => {
-    res.status(200).send({ message: "success" });
-  });
+  app.post(
+    "/api/uploadImage",
+    upload.single("file"),
+    async (req, res, next) => {
+      try {
+        const { file } = req;
+        const fileContent = fs.readFileSync(file.path);
+
+        // conver filestream to base64
+        const base64 =
+          "data:image/png;base64," + fileContent.toString("base64");
+
+        res.status(200).json({
+          cdnObj: base64,
+        });
+      } catch (error) {
+        res
+          .status(501)
+          .json({ error: error.message, message: "failed to upload" });
+      }
+    }
+  );
 
   const getBLogs = async () => {
     var config = {

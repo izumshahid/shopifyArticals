@@ -52,10 +52,10 @@ const ImageUploader = ({ index, count = 1 }) => {
 
     //while uploading multiple files if any one file is greater than 3mb then show toast and not add it in the list
     newFileList.forEach((file) => {
-      if (file.size > 1024 * 1024 * 3) {
+      if (file.size > 1024 * 1024 * 1) {
         notificationError({
           message: "Error",
-          description: "Please upload file less than 3mb",
+          description: "Please upload file less than 1mb",
         });
 
         isGreater = true;
@@ -103,7 +103,6 @@ const ImageUploader = ({ index, count = 1 }) => {
         action={`${process.env.HOST}/api/uploadImage`}
         listType="picture-card"
         fileList={fileList}
-        onRemove={() => console.log("")}
         onPreview={handlePreview}
         onChange={handleChange}
       >

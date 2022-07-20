@@ -518,7 +518,7 @@ const Index = () => {
                                     </>
                                   ) : item.type === "image" ? (
                                     <>
-                                      <Row className="mb-2">
+                                      <Row className="mb-2 d-none">
                                         <Col md={6}>
                                           <Select
                                             className="d-block"

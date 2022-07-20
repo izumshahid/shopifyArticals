@@ -60,7 +60,7 @@ const ArtiaclPreview = () => {
                 ${
                   shopifyAritcals.data.find(
                     (articalItem) => articalItem.id == articalSelected
-                  )?.image?.src ||
+                  )?.image ||
                   "https://i.picsum.photos/id/10/1920/1080.jpg?hmac=Hs_xUcCc7BNrD6fseq1fdN2AC_uSWaywG7V7uh_6fTY"
                 }                
                 alt=${
@@ -170,10 +170,9 @@ const ArtiaclPreview = () => {
                     image.replace(
                       "replace_me",
                       item.content[0]?.thumbUrl?.length > 0
-                        ? item.content[0]?.base64Str
-                          ? item.content[0]?.base64Str
-                          : item.content[0]?.thumbUrl
-                        : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3vrTUU3CKbUDThpm8aZzFXdTmai6PodNfXA&usqp=CAU"
+                        ? item.content[0]?.thumbUrl
+                        : item.content[0]?.response?.cdnObj ||
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3vrTUU3CKbUDThpm8aZzFXdTmai6PodNfXA&usqp=CAU"
                     )
                   )}
                 </div>

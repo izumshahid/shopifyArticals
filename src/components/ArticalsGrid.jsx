@@ -6,7 +6,7 @@ import { MyContext } from "../MyContext";
 import axios from "axios";
 
 // ANTD
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Select, Space, Table } from "antd";
 import { notificationError } from "../../utils/helper";
 import ModalWarning from "./ModalWarning";
 import { StyledButton } from "./styled-components";
@@ -229,13 +229,17 @@ const ArticalsGrid = () => {
     },
   ];
 
-  const getShopifyArticalsBackwordDirection = async (cursorValue = null) => {
+  const getShopifyArticalsBackwordDirection = async (
+    cursorValue = null,
+    perPageRec = 5
+  ) => {
     setIsLoading(true);
     const { data: { articles: { edges = [], pageInfo = {} } = {} } = {} } =
       await shopifyFrontApolloClient.query({
         query: GET_ARTICALS_BACKWORD,
         variables: {
           cursor: cursorValue,
+          perPage: perPageRec,
         },
       });
 
@@ -262,13 +266,17 @@ const ArticalsGrid = () => {
   };
 
   //get articals form shopify in farword direction
-  const getShopifyArticalsFarwordDirection = async (cursorValue = null) => {
+  const getShopifyArticalsFarwordDirection = async (
+    cursorValue = null,
+    perPageRec = 5
+  ) => {
     setIsLoading(true);
     const { data: { articles: { edges = [], pageInfo = {} } = {} } = {} } =
       await shopifyFrontApolloClient.query({
         query: GET_ARTICALS_FARWORD,
         variables: {
           cursor: cursorValue,
+          perPage: perPageRec,
         },
       });
 
@@ -495,6 +503,7 @@ const ArticalsGrid = () => {
           />
         </Button>
       </div>
+
       {removeLink.showModal ? (
         <ModalWarning
           removeLink={removeLink}

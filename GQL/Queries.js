@@ -23,15 +23,15 @@ const ARTICLE_FRAGMENT = `
 `;
 
 export const GET_ARTICALS_FARWORD = gql`
-  query getArticales($cursor: String) {
-    articles(first: 5, after: $cursor, sortKey: UPDATED_AT, reverse: true) {
+  query getArticales($cursor: String, , $perPage : Int) {
+    articles(first: $perPage, after: $cursor, sortKey: UPDATED_AT, reverse: true) {
       ${ARTICLE_FRAGMENT}
     }
   }
 `;
 export const GET_ARTICALS_BACKWORD = gql`
-  query getArticales($cursor: String) {
-    articles(last: 5, before: $cursor, sortKey: UPDATED_AT, reverse: true) {
+  query getArticales($cursor: String, , $perPage : Int) {
+    articles(last: $perPage, before: $cursor, sortKey: UPDATED_AT, reverse: true) {
       ${ARTICLE_FRAGMENT}
     }
   }
