@@ -92,3 +92,7 @@
 .articalsTable .ant-table {
   min-height: 370px;
 }
+
+.quote p {
+  text-align: center;
+}

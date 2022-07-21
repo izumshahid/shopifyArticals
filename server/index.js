@@ -2,7 +2,6 @@
 import { resolve } from "path";
 import express from "express";
 import multer from "multer";
-var upload = multer({ dest: "uploads/" });
 import cookieParser from "cookie-parser";
 import { Shopify, ApiVersion } from "@shopify/shopify-api";
 import "dotenv/config";
@@ -11,9 +10,27 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import Mongo_blogs from "../mongo/shopify.js";
 import axios from "axios";
-import { getAllThemes, uploadImage, uploadToBucket } from "./helpers/custom.js";
+import {
+  getAllThemes,
+  uploadImage,
+  uploadToDOSpace,
+} from "./helpers/custom.js"; //, uploadToBucket
 import { getArticalsEndPOint, getBlogsEndPoint } from "./EndPoints.js";
 import fs from "fs";
+import path from "path";
+
+//multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname + "@" + Date.now());
+  },
+});
+//multer configuration
+
+var upload = multer({ storage });
 
 mongoose
   .connect(process.env.MONGO_URL, {
@@ -54,7 +71,7 @@ Shopify.Webhooks.Registry.addHandler("APP_UNINSTALLED", {
 // export for test use only
 export async function createServer(
   root = process.cwd(),
-  isProd = true
+  isProd = false
   // process.env.NODE_ENV === "production"
 ) {
   const app = express();
@@ -156,6 +173,17 @@ export async function createServer(
     }
   });
 
+  const customArr = upload.fields([{ name: "avatar" }]);
+  app.post(
+    "/api/uploadTosting",
+    upload.single("file"), //customArr
+    async (req, res, next) => {
+      const { file } = req;
+      uploadToDOSpace({ file, folder: "images" });
+      res.status(200).json({ message: "uploading tosting" });
+    }
+  );
+
   // Create record, store artical id and the custom obj whiich needs to be attached to it
   app.post("/api/articalData", async (req, res, next) => {
     try {
@@ -170,17 +198,16 @@ export async function createServer(
           const imagesObj = allDNDItems[i];
           // uploadToBucket(req, res, function (error) {
           //   if (error) {
-          //     console.log(error);
-          //     return res.redirect("/error");
+          //     console.log("-=-=->>", error);
           //   }
-          //   console.log("File uploaded successfully.", res);
+          //   console.log("res ==>>>> : ", res);
           // });
           cdnObj = await uploadImage({ imagesObj });
           allDNDItems[i].content = cdnObj;
         }
       }
 
-      await Mongo_blogs.findOneAndUpdate(
+      const jsonData = await Mongo_blogs.findOneAndUpdate(
         { shopify_artical_Id: articalId },
         {
           shopify_artical_Id: articalId,
@@ -192,6 +219,13 @@ export async function createServer(
           new: true,
         }
       );
+
+      uploadToDOSpace({
+        isImage: false,
+        name: articalId,
+        folder: "articlesObj",
+        contentToUpload: JSON.stringify(jsonData),
+      });
 
       return res.status(200).send({ message: "success", allDNDItems });
     } catch (error) {
@@ -228,7 +262,7 @@ export async function createServer(
   //this is just a simple route for antD image uploader, agar ya nai hoga to vo error dayta ha
   app.post(
     "/api/uploadImage",
-    upload.single("file"),
+    upload.single("file"), //it had to be same name which ic in the form data field
     async (req, res, next) => {
       try {
         const { file } = req;

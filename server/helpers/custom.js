@@ -1,31 +1,49 @@
 import axios from "axios";
-import multerS3 from "multer-s3";
-import aws from "aws-sdk";
-import multer from "multer";
+import { PutObjectCommand, S3 } from "@aws-sdk/client-s3";
+import fs from "fs";
 
-aws.config.update({
-  accessKeyId: "UQG2WY2QY4GYHISWXYY7",
-  secretAccessKey: "CZLtRHLsFQ/A+jV4yXg1mZjf6+dZYFOky5phVNnxXiU",
+const s3Client = new S3({
+  endpoint: process.env.SPACES_ENDPOINT,
+  region: "sgp1",
+  credentials: {
+    accessKeyId: process.env.SPACE_KEY,
+    secretAccessKey: process.env.SPACE_SECRET,
+  },
 });
 
-// Set S3 endpoint to DigitalOcean Spaces
-const spacesEndpoint = new aws.Endpoint(process.env.SPACES_ENDPOINT);
-const s3 = new aws.S3({
-  endpoint: spacesEndpoint,
-});
+// Uploads the specified file to the chosen path.
+export const uploadToDOSpace = async ({
+  isImage = true,
+  file,
+  folder,
+  name = null,
+  contentToUpload = null,
+}) => {
+  let UploadingfileContent;
+  let UploadingfileName;
 
-// Change bucket property to your Space name
-export const uploadToBucket = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "printfresh-dev/images/",
-    acl: "public-read",
-    key: function (request, file, cb) {
-      console.log("==>> uploadToBucket : ", file);
-      cb(null, file.originalname);
-    },
-  }),
-}).array("upload", 1);
+  if (isImage) {
+    const { filename, path } = file;
+    UploadingfileName = name || filename;
+    UploadingfileContent = Buffer.from(path);
+  } else {
+    UploadingfileContent = contentToUpload;
+  }
+
+  const bucketParams = {
+    Bucket: process.env.SPACE_BUCKET_NAME,
+    Key: `${folder}/${String(UploadingfileName).split("@")[0]}`,
+    Body: UploadingfileContent,
+    ACL: "public-read",
+  };
+
+  try {
+    const data = await s3Client.send(new PutObjectCommand(bucketParams));
+    return data;
+  } catch (err) {
+    console.log("Error uploadToDOSpace : ", err);
+  }
+};
 
 function* genApiCall(content, themeId) {
   for (const item of content) {
