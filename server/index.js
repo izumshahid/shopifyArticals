@@ -9,15 +9,9 @@ import mongoose from "mongoose";
 import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import Mongo_blogs from "../mongo/shopify.js";
-import axios from "axios";
-import {
-  getAllThemes,
-  uploadImage,
-  uploadToDOSpace,
-} from "./helpers/custom.js"; //, uploadToBucket
-import { getArticalsEndPOint, getBlogsEndPoint } from "./EndPoints.js";
+
+import { uploadToDOSpace } from "./helpers/custom.js"; //, uploadToBucket
 import fs from "fs";
-import path from "path";
 
 //multer configuration
 const storage = multer.diskStorage({
@@ -25,7 +19,7 @@ const storage = multer.diskStorage({
     cb(null, "./uploads");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname + "@" + Date.now());
+    cb(null, file.originalname + "_print_fresh_" + Date.now());
   },
 });
 //multer configuration
@@ -180,6 +174,7 @@ export async function createServer(
     async (req, res, next) => {
       const { file } = req;
       uploadToDOSpace({ file, folder: "images" });
+
       res.status(200).json({ message: "uploading tosting" });
     }
   );
@@ -189,21 +184,33 @@ export async function createServer(
     try {
       let { allDNDItems, articalId } = req.body;
 
-      let cdnObj;
       for (let i = 0; i < allDNDItems.length; i++) {
         if (
           allDNDItems[i].type === "image" ||
           allDNDItems[i].type === "images"
         ) {
           const imagesObj = allDNDItems[i];
-          // uploadToBucket(req, res, function (error) {
-          //   if (error) {
-          //     console.log("-=-=->>", error);
-          //   }
-          //   console.log("res ==>>>> : ", res);
-          // });
-          cdnObj = await uploadImage({ imagesObj });
-          allDNDItems[i].content = cdnObj;
+          let images = [];
+
+          allDNDItems[i].content.map((image) => {
+            if ("response" in image) {
+              images.push({
+                name: image.name,
+                status: "done",
+                thumbUrl: image.response?.spaceCdn,
+                url: image.response?.spaceCdn,
+              });
+            } else {
+              //agar already aysa obj bana hoa ha to pher banana nai ha matlub ya porani image ha jo pahay b upload hoi ha is article kay liya
+              images.push({
+                name: image.name,
+                status: "done",
+                thumbUrl: image.thumbUrl,
+                url: image.url,
+              });
+            }
+          });
+          allDNDItems[i].content = [...images];
         }
       }
 
@@ -266,14 +273,23 @@ export async function createServer(
     async (req, res, next) => {
       try {
         const { file } = req;
-        const fileContent = fs.readFileSync(file.path);
+        const { filename, path } = file;
+        const fileContent = fs.readFileSync(path);
 
         // conver filestream to base64
         const base64 =
           "data:image/png;base64," + fileContent.toString("base64");
 
+        const endpoint = String(process.env.SPACES_ENDPOINT).split(
+          "https://"
+        )[1];
+        const fName = String(filename).split("_print_fresh_")[0];
+
+        uploadToDOSpace({ file, folder: "images" });
+        const spaceCdn = `https://${process.env.SPACE_BUCKET_NAME}.${endpoint}/images/${fName}`;
+
         res.status(200).json({
-          cdnObj: base64,
+          spaceCdn,
         });
       } catch (error) {
         res
@@ -282,51 +298,6 @@ export async function createServer(
       }
     }
   );
-
-  const getBLogs = async () => {
-    var config = {
-      method: "get",
-      url: getBlogsEndPoint,
-      headers: {
-        "X-Shopify-Access-Token": process.env.X_SHOPIFY_ACCESS_TOKEN,
-      },
-    };
-
-    const { data: { blogs = [] } = {} } = await axios(config);
-    return blogs;
-  };
-
-  app.get("/api/getArticals", async (req, res, next) => {
-    try {
-      const blogsArr = await getBLogs();
-
-      const articalEndpOint = getArticalsEndPOint.replace(
-        "<blogId>",
-        blogsArr[0].id
-      );
-
-      var config = {
-        method: "get",
-        url: articalEndpOint,
-        headers: {
-          "X-Shopify-Access-Token": process.env.X_SHOPIFY_ACCESS_TOKEN,
-        },
-      };
-
-      const { data: { articles = [] } = {} } = await axios(config);
-
-      //sort wrt update
-      articles.sort((a, b) => {
-        return new Date(b.updated_at) - new Date(a.updated_at);
-      });
-
-      res.status(200).json({ articles });
-    } catch (error) {
-      res
-        .status(501)
-        .json({ error: error.message, message: "failed to get articals" });
-    }
-  });
 
   /**
    * @type {import('vite').ViteDevServer}

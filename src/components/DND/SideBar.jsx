@@ -12,6 +12,7 @@ const SideBar = () => {
     fieldHeading,
     isGettingData,
     isLoading,
+    showGrid,
   } = useContext(MyContext);
 
   const onDragEnd = (obj) => {
@@ -39,95 +40,99 @@ const SideBar = () => {
   }, [createNewField]);
 
   return isGettingData ? (
-    <div className="d-flex text-center align-items-center mt-5 flex-column">
-      <div className="spinner-border text-primary" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-      <div className="d-block w-100">
-        <p>Fetching data</p>
+    <div className={!showGrid ? "articalPreviewWrapper" : "d-none"}>
+      <div className="d-flex text-center align-items-center mt-5 flex-column">
+        <div className="spinner-border text-primary" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+        <div className="d-block w-100">
+          <p>Fetching data</p>
+        </div>
       </div>
     </div>
   ) : (
-    <div className={allDNDItems.length ? "" : "d-none"}>
-      <BlurDiv height="100%" className={isLoading ? "" : "d-none"}>
-        <div className="d-flex text-center align-items-center mt-5 flex-column">
-          <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
+    <div className={!showGrid ? "articalPreviewWrapper" : "d-none"}>
+      <div className={allDNDItems.length ? "" : "d-none"}>
+        <BlurDiv height="100%" className={isLoading ? "" : "d-none"}>
+          <div className="d-flex text-center align-items-center mt-5 flex-column">
+            <div className="spinner-border text-primary" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+            <div className="d-block w-100">
+              <p>Applying changes</p>
+            </div>
           </div>
-          <div className="d-block w-100">
-            <p>Applying changes</p>
-          </div>
-        </div>
-      </BlurDiv>
+        </BlurDiv>
 
-      <div>
-        <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
-          <Droppable droppableId="droppable">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={{
-                  padding: "8px",
-                  height: "100%",
-                  minHeight: "100vh",
-                }}
-              >
-                {allDNDItems.map((item, idx) => (
-                  <Draggable key={item.id} draggableId={item.id} index={idx}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={{
-                          userSelect: "none",
-                          margin: "8px",
-                          backgroundColor: snapshot.isDragging
-                            ? "lightpink"
-                            : "lightgreen",
-                          ...provided.draggableProps.style,
-                        }}
-                      >
-                        <h6
+        <div>
+          <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  style={{
+                    padding: "8px",
+                    height: "100%",
+                    minHeight: "100vh",
+                  }}
+                >
+                  {allDNDItems.map((item, idx) => (
+                    <Draggable key={item.id} draggableId={item.id} index={idx}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
                           style={{
-                            padding: "10px 0 10px 15px",
-                            margin: "0",
-                            backgroundColor: "lightgray",
+                            userSelect: "none",
+                            margin: "8px",
+                            backgroundColor: snapshot.isDragging
+                              ? "lightpink"
+                              : "lightgreen",
+                            ...provided.draggableProps.style,
                           }}
                         >
-                          <div className="d-flex">
-                            <div className="d-flex align-items-center">
-                              <i
-                                className="fa fa-bars"
-                                style={{ fontSize: "24px" }}
-                              ></i>
-                            </div>
-                            <div className="mx-sm-1">
-                              <span className="d-inline-block">
-                                {item.type}
-                                <span
-                                  style={{
-                                    width: "100%",
-                                    display: "block",
-                                    fontSize: "10px",
-                                    color: "#98a4af",
-                                  }}
-                                >
-                                  {String(item.id).split("_")[1]}
+                          <h6
+                            style={{
+                              padding: "10px 0 10px 15px",
+                              margin: "0",
+                              backgroundColor: "lightgray",
+                            }}
+                          >
+                            <div className="d-flex">
+                              <div className="d-flex align-items-center">
+                                <i
+                                  className="fa fa-bars"
+                                  style={{ fontSize: "24px" }}
+                                ></i>
+                              </div>
+                              <div className="mx-sm-1">
+                                <span className="d-inline-block">
+                                  {item.type}
+                                  <span
+                                    style={{
+                                      width: "100%",
+                                      display: "block",
+                                      fontSize: "10px",
+                                      color: "#98a4af",
+                                    }}
+                                  >
+                                    {String(item.id).split("_")[1]}
+                                  </span>
                                 </span>
-                              </span>
+                              </div>
                             </div>
-                          </div>
-                        </h6>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+                          </h6>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
       </div>
     </div>
   );

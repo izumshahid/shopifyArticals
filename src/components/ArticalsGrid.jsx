@@ -18,6 +18,7 @@ import {
   RightOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+import EditPermissionModal from "./EditPermissionModal";
 
 const ArticalsGrid = () => {
   const {
@@ -41,6 +42,7 @@ const ArticalsGrid = () => {
     secretKey: "",
   });
   const [page, setPage] = useState(0);
+  const [editPermission, setEditPermission] = useState(false);
 
   const searchInput = useRef(null);
 
@@ -136,28 +138,7 @@ const ArticalsGrid = () => {
       key: "title",
       ...getColumnSearchProps("title"),
     },
-    // {
-    //   title: "Updated at",
-    //   dataIndex: "updated_at",
-    //   key: "updated_at",
-    //   render: (_, record) => {
-    //     return (
-    //       <div>
-    //         {/* //show updated with time */}
-    //         {new Date(record?.updated_at).toLocaleString(
-    //           window.navigator.userLanguage || window.navigator.language,
-    //           {
-    //             month: "short",
-    //             day: "numeric",
-    //             year: "2-digit",
-    //             hour: "numeric",
-    //             minute: "numeric",
-    //           }
-    //         )}
-    //       </div>
-    //     );
-    //   },
-    // },
+
     {
       title: "Action",
       key: "action",
@@ -308,29 +289,6 @@ const ArticalsGrid = () => {
       hasPrevious: pageInfo.hasPreviousPage,
     });
     setPage(page + 1);
-    // var config = {
-    //   method: "get",
-    //   url: "/api/getArticals",
-    // };
-
-    // try {
-    //   setIsLoading(true);
-    //   const { data: { articles = [] } = {} } = await axios(config);
-    //   setIsLoading(false);
-    //   setShopifyAritcals({
-    //     ...shopifyAritcals,
-    //     data: articles,
-    //     //   hasNext: pageInfo.hasNextPage,
-    //     //   hasPrevious: pageInfo.hasPreviousPage,
-    //   });
-    // } catch (error) {
-    //   const { response: { data: { message } = {} } = {} } = error;
-    //   notificationError({
-    //     message: "Error",
-    //     description: message,
-    //   });
-    //   setIsLoading(false);
-    // }
   };
 
   //   get custom data from db for this artical
@@ -398,9 +356,10 @@ const ArticalsGrid = () => {
   };
 
   const handleEdit = (artical) => {
-    setShowGrid(false);
+    // setShowGrid(false);
     setArticalSelected(artical.id);
     getLinkedArticalDataFromDb(artical.id);
+    setEditPermission(true);
   };
 
   useEffect(() => {
@@ -488,6 +447,10 @@ const ArticalsGrid = () => {
           setRemoveLink={setRemoveLink}
           getAllAritcalIdsFromDb={getAllAritcalIdsFromDb}
         />
+      ) : null}
+
+      {editPermission ? (
+        <EditPermissionModal setEditPermission={setEditPermission} />
       ) : null}
     </div>
   );

@@ -4,7 +4,7 @@ import { MyContext } from "../MyContext";
 import { useEffect } from "react";
 
 const ArtiaclPreview = () => {
-  const { articalSelected, allDNDItems, shopifyAritcals } =
+  const { articalSelected, allDNDItems, showGrid, shopifyAritcals } =
     useContext(MyContext);
 
   const header = `<div className="header">
@@ -145,7 +145,7 @@ const ArtiaclPreview = () => {
 </div>`;
 
   return (
-    <div className="articalPreviewWrapper">
+    <div className={!showGrid ? "articalPreviewWrapper" : "d-none"}>
       {articalSelected ? (
         <>
           <p
@@ -174,7 +174,7 @@ const ArtiaclPreview = () => {
                     image.replace(
                       "replace_me",
                       item.content[0]?.response
-                        ? item.content[0]?.response?.cdnObj
+                        ? item.content[0]?.response?.spaceCdn
                         : item.content[0]?.thumbUrl || ""
                     )
                   )}
