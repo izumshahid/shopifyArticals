@@ -30,8 +30,8 @@ export const uploadToBucket = multer({
 function* genApiCall(content, themeId) {
   for (const item of content) {
     if ("percent" in item) {
-      let { name = "", base64Str = "" } = item;
-      let thumbUrl = base64Str.split("base64,")[1];
+      let { name = "", response: { cdnObj = "" } = {} } = item;
+      let thumbUrl = cdnObj.split("base64,")[1];
 
       yield uploadImageToShopify({
         name,

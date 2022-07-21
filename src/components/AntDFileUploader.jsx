@@ -65,14 +65,8 @@ const ImageUploader = ({ index, count = 1 }) => {
     //if any file is greater than 3MB, don't upload or push to state
     if (isGreater) return;
 
-    let localFileList = [...newFileList];
-    localFileList.forEach(async function (file, index) {
-      file.base64Str =
-        file?.originFileObj && (await getBase64(file.originFileObj));
-    });
-
     const newAllDNDItems = [...allDNDItems];
-    newAllDNDItems[index].content = [...localFileList];
+    newAllDNDItems[index].content = [...newFileList];
 
     setFileList([...newFileList]);
     setAllDNDItems([...newAllDNDItems]);

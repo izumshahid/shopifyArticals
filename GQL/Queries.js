@@ -6,6 +6,7 @@ const ARTICLE_FRAGMENT = `
         authorV2 {
           name
         }
+        tags
         image {
           src
         }

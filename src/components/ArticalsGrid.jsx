@@ -103,9 +103,13 @@ const ArticalsGrid = () => {
       title: "Image",
       dataIndex: "image",
       key: `image`,
-      render: (_, record) => {
+      render: (_, record, idx) => {
         return (
-          <div className="avatar " style={{ width: "70px", height: "50px" }}>
+          <div
+            className="avatar"
+            key={idx}
+            style={{ width: "70px", height: "50px" }}
+          >
             <a href={record.articalStoreUrl} target="_blank">
               <img
                 className="w-100 rounded h-100 "
@@ -251,6 +255,8 @@ const ArticalsGrid = () => {
         title: edge.node.title,
         cursor: edge.cursor,
         image: edge.node?.image?.src || undefined,
+        articalStoreUrl: edge.node?.onlineStoreUrl,
+        tags: edge.node?.tags,
       };
     });
 
@@ -289,6 +295,7 @@ const ArticalsGrid = () => {
         cursor: edge.cursor,
         image: edge.node?.image?.src || undefined,
         articalStoreUrl: edge.node?.onlineStoreUrl,
+        tags: edge.node?.tags,
       };
     });
 
@@ -415,35 +422,6 @@ const ArticalsGrid = () => {
         columns={columns}
         dataSource={shopifyAritcals.data}
         pagination={false}
-        // pagination={{
-        //   showSizeChanger: false,
-        //   current: shopifyAritcals.page,
-        //   pageSize: 5,
-        //   nextIcon: (
-        //     <RightOutlined
-        //       style={shopifyAritcals.hasNext ? {} : { display: "none " }}
-        //       onClick={() => {
-        //         shopifyAritcals.hasNext &&
-        //           getShopifyArticalsFarwordDirection(
-        //             shopifyAritcals.lastNodeCursor
-        //           );
-
-        //         // console.log(shopifyAritcals);
-        //       }}
-        //     />
-        //   ),
-        //   prevIcon: (
-        //     <LeftOutlined
-        //       style={shopifyAritcals.hasPrevious ? {} : { display: "none " }}
-        //       onClick={() => {
-        //         shopifyAritcals.hasPrevious &&
-        //           getShopifyArticalsBackwordDirection(
-        //             shopifyAritcals.firstNodeCursor
-        //           );
-        //       }}
-        //     />
-        //   ),
-        // }}
       />
       <div
         className={

@@ -17,7 +17,7 @@ const ArtiaclPreview = () => {
               ${
                 shopifyAritcals.data.find(
                   (articalItem) => articalItem.id == articalSelected
-                )?.tags || "Travel"
+                )?.tags[0] || "Travel"
               }
             </div>
 
@@ -173,9 +173,9 @@ const ArtiaclPreview = () => {
                   {parse(
                     image.replace(
                       "replace_me",
-                      item.content[0]?.thumbUrl?.length > 0
-                        ? item.content[0]?.thumbUrl
-                        : item.content[0]?.response?.cdnObj || ""
+                      item.content[0]?.response
+                        ? item.content[0]?.response?.cdnObj
+                        : item.content[0]?.thumbUrl || ""
                     )
                   )}
                 </div>
