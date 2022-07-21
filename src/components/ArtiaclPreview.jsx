@@ -21,7 +21,7 @@ const ArtiaclPreview = () => {
               }
             </div>
 
-            <h1 className="eames-century-modern-regular-32 mb-2 text-center">
+            <h1 className="eames-century-modern-regular-32 mb-2 text-center px-4">
               ${
                 shopifyAritcals.data.find(
                   (articalItem) => articalItem.id == articalSelected

@@ -1,6 +1,33 @@
 .ql-container.ql-snow {
   border: none !important;
 }
+.ql-editor {
+  height: 75%;
+}
+
+/* custom scrolbar to preview section */
+/* width */
+.ql-editor ::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.ql-editor ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+.ql-editor ::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.ql-editor ::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+/* custom scrolbar to preview section */
 
 .DNDSideBar {
   background: #b9bebb3d !important;
