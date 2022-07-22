@@ -21529,6 +21529,79 @@ fieldset:disabled .btn {
 }
 .ql-container.ql-snow {
   border: none !important;
+}
+.ql-editor {
+  height: 75%;
+}
+.ql-editor ::-webkit-scrollbar {
+  width: 2px;
+}
+.ql-editor ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px gray;
+  border-radius: 10px;
+}
+.ql-editor ::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+}
+.ql-editor ::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+.DNDSideBar {
+  background: #b9bebb3d !important;
+  min-width: 5% !important;
+  max-width: 150px !important;
+}
+.previewBar {
+  background: #b9bebb3d !important;
+  min-width: 20% !important;
+  width: 100% !important;
+}
+.previewBar ::-webkit-scrollbar,
+.DNDSideBarWrapper ::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}
+.previewBar ::-webkit-scrollbar-track,
+.DNDSideBarWrapper ::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px gray;
+  border-radius: 10px;
+}
+.previewBar ::-webkit-scrollbar-thumb,
+.DNDSideBarWrapper ::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+}
+.previewBar ::-webkit-scrollbar-thumb:hover,
+.DNDSideBarWrapper ::-webkit-scrollbar-thumb:hover {
+  background: #b30000;
+}
+.articalPreviewWrapper {
+  max-height: 100vh;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 10px;
+}
+.articalPreviewWrapper,
+.articalPreviewWrapper p,
+.articalPreviewWrapper h1 {
+  font-size: 10px;
+  text-align: left;
+}
+.fieldTypeOpt {
+  cursor: pointer;
+  background: #d3d3d369;
+  width: 90%;
+  padding: 5px 8px;
+  border-radius: 8px;
+}
+.articalsTable .ant-table {
+  min-height: 370px;
+}
+.quote p {
+  text-align: center;
 } /*!
  * 
  * antd v4.21.2
