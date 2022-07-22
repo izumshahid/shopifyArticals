@@ -40,7 +40,7 @@ const SideBar = () => {
   }, [createNewField]);
 
   return isGettingData ? (
-    <div className={!showGrid ? "articalPreviewWrapper" : "d-none"}>
+    <div className={!showGrid ? "DNDSideBarWrapper" : "d-none"}>
       <div className="d-flex text-center align-items-center mt-5 flex-column">
         <div className="spinner-border text-primary" role="status">
           <span className="sr-only">Loading...</span>
@@ -51,7 +51,7 @@ const SideBar = () => {
       </div>
     </div>
   ) : (
-    <div className={!showGrid ? "articalPreviewWrapper" : "d-none"}>
+    <div className={!showGrid ? "DNDSideBarWrapper" : "d-none"}>
       <div className={allDNDItems.length ? "" : "d-none"}>
         <BlurDiv height="100%" className={isLoading ? "" : "d-none"}>
           <div className="d-flex text-center align-items-center mt-5 flex-column">
@@ -94,7 +94,7 @@ const SideBar = () => {
                         >
                           <h6
                             style={{
-                              padding: "10px 0 10px 15px",
+                              padding: "7px 0 7px 10px",
                               margin: "0",
                               backgroundColor: "lightgray",
                             }}
@@ -103,22 +103,12 @@ const SideBar = () => {
                               <div className="d-flex align-items-center">
                                 <i
                                   className="fa fa-bars"
-                                  style={{ fontSize: "24px" }}
+                                  style={{ fontSize: "16px" }}
                                 ></i>
                               </div>
                               <div className="mx-sm-1">
                                 <span className="d-inline-block">
                                   {item.type}
-                                  <span
-                                    style={{
-                                      width: "100%",
-                                      display: "block",
-                                      fontSize: "10px",
-                                      color: "#98a4af",
-                                    }}
-                                  >
-                                    {String(item.id).split("_")[1]}
-                                  </span>
                                 </span>
                               </div>
                             </div>

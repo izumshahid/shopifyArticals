@@ -92,6 +92,7 @@ const ModalWarning = ({
       <p>Are you sure you want to remove the linked data for this article?</p>
 
       <Input.Password
+        autoFocus={true}
         placeholder="input secret key"
         className="w-75 form-control"
         onChange={handleChange}

@@ -45,6 +45,7 @@ const EditPermissionModal = ({ setEditPermission }) => {
       <p>Please submit the secret key shared to perform editing.</p>
 
       <Input.Password
+        autoFocus={true}
         placeholder="input secret key"
         className="w-75 form-control"
         onChange={handleChange}
