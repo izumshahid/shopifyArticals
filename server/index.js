@@ -210,6 +210,7 @@ export async function createServer(
               });
             }
           });
+
           allDNDItems[i].content = [...images];
         }
       }

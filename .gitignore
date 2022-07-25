@@ -106,3 +106,4 @@ uploads/
 
 # TernJS port file
 .tern-port
+config.bat
